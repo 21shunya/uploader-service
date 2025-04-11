@@ -45,6 +45,12 @@
     opacity: 0;
 }
 
+.content {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
 .loader {
     position: absolute;
     color: var(--color-bg);

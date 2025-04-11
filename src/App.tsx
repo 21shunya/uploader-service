@@ -1,44 +1,90 @@
-import './App.css';
+import { isAxiosError } from 'axios';
 import { useState } from 'react';
-import viteLogo from '../public/vite.svg';
-import reactLogo from './assets/react.svg';
+import { getDownloadLink, getUploadLink, uploadFile } from '@/api';
+import { UploadForm } from '@/components/UploadForm';
+import { useServiceHandler } from '@/hooks/use-service-handler';
+import { IconDownload } from '@/icons/IconDownload';
+import { Button } from '@/ui/Button';
+import { downloadUrl } from '@/utils/download-url';
+import styles from './App.module.css';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [overwrite, setOverwrite] = useState(false);
+  const [downloadPath, setDownloadPath] = useState<string | null>(null);
+
+  const {
+    error: uploadError,
+    isSubmitting: isUploading,
+    handler: uploadHandler,
+    clearError: clearUploadError,
+  } = useServiceHandler();
+
+  const handleFileChange = () => {
+    if (overwrite) {
+      setOverwrite(false);
+    }
+
+    if (uploadError?.status === 409) {
+      clearUploadError();
+    }
+  };
+
+  const handleUploadFile = async (file: File) => {
+    const service = async () => {
+      try {
+        const res = await getUploadLink(file.name, overwrite);
+        setOverwrite(false);
+
+        const formData = new FormData();
+        formData.append('file', file);
+        await uploadFile(res.data.href, formData);
+
+        setDownloadPath(file.name);
+        return Promise.resolve();
+      } catch (err) {
+        if (isAxiosError(err) && err.status === 409) {
+          setOverwrite(true);
+        }
+        return Promise.reject(err);
+      }
+    };
+
+    return uploadHandler(service);
+  };
+
+  const { error: downloadError, isSubmitting: isDownloading, handler: downloadHandler } = useServiceHandler();
+  const handleDownloadFile = async () => {
+    if (!downloadPath) {
+      return;
+    }
+
+    await downloadHandler(() =>
+      getDownloadLink(downloadPath).then((res) => downloadUrl(res.data.href, 'test_name')),
+    );
+  };
 
   return (
-    <>
-      <div>
-        <a
-          href="https://vite.dev"
-          target="_blank"
+    <div className={styles.wrapper}>
+      <UploadForm
+        error={uploadError}
+        isSubmitting={isUploading}
+        onChange={handleFileChange}
+        onSubmit={handleUploadFile}
+      />
+
+      {downloadPath && (
+        <Button
+          style={{ alignSelf: 'center' }}
+          loading={isDownloading}
+          onClick={handleDownloadFile}
         >
-          <img
-            src={viteLogo}
-            className="logo"
-            alt="Vite logo"
-          />
-        </a>
-        <a
-          href="https://react.dev"
-          target="_blank"
-        >
-          <img
-            src={reactLogo}
-            className="logo react"
-            alt="React logo"
-          />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+          <IconDownload className={styles.icon} />
+          Скачать файл {downloadPath}
+        </Button>
+      )}
+
+      {downloadError && <div className={styles.error}>{downloadError.message}</div>}
+    </div>
   );
 }
 

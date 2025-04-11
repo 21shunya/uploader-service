@@ -27,6 +27,12 @@
   --radius: 8px;
 }
 
+#root {
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
 body {
   margin: 0;
   display: flex;
