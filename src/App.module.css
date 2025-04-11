@@ -1,0 +1,15 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.icon {
+  font-size: 1.5rem;
+  color: var(--color-bg);
+}
+
+.error {
+  font-size: 1rem;
+  color: var(--color-danger);
+}
