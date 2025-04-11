@@ -1,0 +1,54 @@
+.button {
+    appearance: none;
+    border: none;
+    line-height: normal;
+    overflow: visible;
+    text-decoration: none;
+    width: auto;
+
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem 1rem;
+
+    background-color: var(--color-primary);
+    border-radius: var(--radius);
+
+    font-size: 1rem;
+    color: var(--color-bg);
+
+    transition: all 0.3s;
+}
+
+.button:hover {
+    opacity: 0.8;
+}
+
+.button:active {
+    opacity: 0.5;
+}
+
+.button-disabled {
+    opacity: 0.3;
+}
+
+.button-disabled:is(:hover, :active) {
+    opacity: 0.3;
+}
+
+.button-loading:is(:hover, :focus, :active) {
+    opacity: 1;
+}
+
+.button-loading .content {
+    opacity: 0;
+}
+
+.loader {
+    position: absolute;
+    color: var(--color-bg);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}

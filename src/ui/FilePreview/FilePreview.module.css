@@ -1,0 +1,94 @@
+.wrapper {
+    display: flex;
+    gap: 1rem;
+    transition: all 0.3s;
+}
+
+.wrapper-disabled {
+    opacity: 0.5;
+}
+
+.wrapper-disabled .input:hover {
+    border: 1px solid transparent;
+}
+
+.wrapper-disabled .button:is(:hover, :active) {
+    opacity: 1;
+}
+
+.size {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 4.5rem;
+    width: 4.5rem;
+
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    font-size: 0.75rem;
+    border-radius: var(--radius);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    flex: 1;
+    gap: 0.5rem;
+}
+
+.description {
+    display: flex;
+    flex-direction: column;
+    align-items: inherit;
+    gap: 0;
+    width: 100%;
+}
+
+.input {
+    padding: 0.25rem;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+
+    font-size: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    width: 100%;
+    transition: all 0.2s;
+}
+
+.input:hover {
+    border: 1px solid rgba(160, 160, 160, 0.2);
+}
+
+.input:focus {
+    border: 1px solid var(--color-text-secondary);
+}
+
+.button {
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    margin-left: 0.25rem;
+    transition: all 0.3s;
+}
+
+.button:hover {
+    opacity: 0.7;
+}
+
+.button:active {
+    opacity: 0.5;
+}
+
+.error {
+    color: var(--color-danger);
+    font-size: 0.75rem;
+    margin-left: 0.25rem;
+}
