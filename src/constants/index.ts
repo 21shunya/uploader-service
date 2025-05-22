@@ -1,5 +1,7 @@
 import { ErrorStatus } from '@/types';
 
+export const unknownError = 'Неизвестная ошибка';
+
 export const errorMessages: Record<ErrorStatus | number, string> = {
   [400]: 'Некорректные данные.',
   [401]: 'Не авторизован.',

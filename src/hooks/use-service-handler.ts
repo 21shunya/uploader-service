@@ -1,6 +1,6 @@
 import { isAxiosError } from 'axios';
 import { useState } from 'react';
-import { errorMessages } from '@/constants';
+import { unknownError } from '@/constants';
 import { AppError } from '@/types';
 
 export const useServiceHandler = () => {
@@ -9,7 +9,7 @@ export const useServiceHandler = () => {
 
   const clearError = () => setError(null);
 
-  const handler = async (service: () => Promise<unknown>) => {
+  const handler = async <T>(service: () => Promise<T>) => {
     setIsSubmitting(true);
     setError(null);
 
@@ -17,12 +17,11 @@ export const useServiceHandler = () => {
       await service();
       return Promise.resolve();
     } catch (err) {
-      if (isAxiosError(err)) {
-        const status = err.status;
-        const message = status ? errorMessages[status] : err?.response?.data.message || 'Неизвестная ошибка';
-        setError({ status, message });
-      }
-
+      setError(() =>
+        isAxiosError(err)
+          ? { status: err.status, message: err.message || unknownError }
+          : { message: unknownError },
+      );
       return Promise.reject(err);
     } finally {
       setIsSubmitting(false);
